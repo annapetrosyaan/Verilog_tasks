@@ -1,13 +1,18 @@
 `timescale 1ns/1ps
 
 module dut_tb();
+  parameter SIZE = 8;
   reg clk,reset;
-  reg [7:0] a,b;
-  wire[7:0] out;
-  reg [7:0] test;
+  reg [SIZE -1 : 0] a,b;
+  wire[SIZE -1:0] out;
+  reg [SIZE -1:0] test;
   integer pass = 0;
   integer fail = 0;
-  dut uut(.clk(clk),.reset(reset),.a(a),.b(b),.out(out));
+  dut #(.BITS(SIZE))
+      uut (.clk(clk),
+        .reset(reset),
+        .a(a),.b(b),
+        .out(out));
   initial begin
     clk <= 0;
     forever #10 clk = ~clk;
@@ -34,12 +39,12 @@ module dut_tb();
         end
      @(posedge clk);
      end
-    $display ("passed:", pass);
-    $display("failed:", fail);
+    $display ("Passed:", pass);
+    $display("Failed:", fail);
     $finish;
     end
     initial begin
       $dumpfile("dump.vcd");
-      $dumpvars(1,dut_tb);
-    end
+      $dumpvars(1,dut);
+    end;
 endmodule
